@@ -7,8 +7,11 @@ resource "aws_launch_configuration" "demo" {
 
   user_data              = <<EOF
 #!/bin/bash
-echo "Hello, World" > index.html
-nohup busybox httpd -f -p ${var.server_port} &
+sudo apt-get update
+sudo apt-get install apache2
+ip_address=`curl -4 icanhazip.com`
+echo "<h1>WEB Server with IP: $ip_address</h1><br><h3>Build by Terraform!</h3>" > /var/www/index.html
+sudo service apache2 start
 EOF
 
   # Required when using ASG in run config
